@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinema Lines · 영화로 배우는 영어</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf7f0;
+  --bg-warm: #ffffff;
+  --ink: #1a1614;
+  --gold: #b8893d;
+  --gold-dim: #8b6f47;
+  --red: #a01e23;
+  --green: #5a7a4a;
+  --text-dim: #6b6358;
+  --line: rgba(139, 111, 71, 0.25);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(ellipse at top, rgba(184, 137, 61, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(160, 30, 35, 0.06) 0%, transparent 50%);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 100;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  position: relative;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 24px;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.logo span {
+  color: var(--gold);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Scene Card */
+.scene {
+  background: var(--bg-warm);
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.5s ease;
+  box-shadow: 0 24px 48px -16px rgba(26, 22, 20, 0.08), 0 8px 16px -8px rgba(26, 22, 20, 0.04);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scene-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--line);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.scene-meta .left {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.movie-title { color: var(--gold); }
+
+.counter .current {
+  color: var(--gold);
+  font-size: 14px;
+}
+
+.scene-inner {
+  display: flex;
+  min-height: 340px;
+}
+
+.scene-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Quote display */
+.scene-body {
+  padding: 40px 48px 32px;
+  text-align: center;
+  position: relative;
+}
+
+.quote {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(20px, 3vw, 32px);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--ink);
+  max-width: 720px;
+  margin: 0 auto 20px;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.01em;
+}
+
+/* Clickable word */
+.word {
+  cursor: pointer;
+  display: inline;
+  border-radius: 2px;
+  transition: background 0.15s, color 0.15s;
+  padding: 1px 2px;
+  position: relative;
+}
+
+.word:hover {
+  background: rgba(184, 137, 61, 0.15);
+  color: var(--gold);
+}
+
+.word.active {
+  background: rgba(184, 137, 61, 0.2);
+  color: var(--gold);
+}
+
+/* Word popup */
+.word-popup {
+  position: fixed;
+  z-index: 9999;
+  background: var(--ink);
+  color: var(--bg);
+  border: 1px solid var(--gold-dim);
+  padding: 16px 20px;
+  min-width: 220px;
+  max-width: 300px;
+  box-shadow: 0 16px 40px -8px rgba(26, 22, 20, 0.4);
+  display: none;
+  animation: popIn 0.18s ease;
+  pointer-events: auto;
+}
+
+.word-popup.show { display: block; }
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popup-word {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.popup-pos {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 10px;
+}
+
+.popup-meaning {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--bg);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.popup-example {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(250, 247, 240, 0.55);
+  line-height: 1.5;
+  border-top: 1px solid rgba(139, 111, 71, 0.3);
+  padding-top: 8px;
+}
+
+.popup-loading {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.popup-loading::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--gold-dim);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--gold-dim);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px;
+  transition: color 0.15s;
+}
+.popup-close:hover { color: var(--gold); }
+
+.popup-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(250,247,240,0.3);
+  margin-top: 8px;
+  text-align: right;
+}
+
+.movie-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.character {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+
+.character::before { content: '— '; }
+
+/* Hint tip */
+.click-tip {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  opacity: 0.6;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.click-tip svg {
+  width: 12px; height: 12px;
+  fill: none; stroke: currentColor; stroke-width: 1.5;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 32px 24px;
+  flex-wrap: wrap;
+}
+
+/* Pronunciation */
+.pronunciation {
+  margin-top: 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  display: none;
+}
+
+.pronunciation.show {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+.pronunciation::before {
+  content: '발음 · ';
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-right: 4px;
+}
+
+/* Translation */
+.translation {
+  margin: 0 48px;
+  padding: 20px 0;
+  border-top: 1px dashed var(--line);
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  text-align: center;
+  display: none;
+}
+
+.translation.show {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.translation strong {
+  color: var(--gold);
+  font-weight: 500;
+  margin-right: 6px;
+}
+
+/* Footer / Nav */
+.nav {
+  padding: 20px 32px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--bg-warm);
+}
+
+/* Buttons */
+.btn {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--ink);
+  padding: 11px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.btn.primary:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+.btn.ghost {
+  border-color: var(--line);
+  color: var(--text-dim);
+}
+
+.btn.ghost:hover {
+  color: var(--gold);
+  background: transparent;
+  border-color: var(--gold-dim);
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hint {
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+
+@media (max-width: 640px) {
+  .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .scene-body { padding: 40px 24px 24px; }
+  .scene-meta { padding: 14px 20px; }
+  .scene-meta .left { gap: 12px; font-size: 10px; }
+  .translation { margin: 0 20px; }
+  .nav { padding: 16px 20px; }
+  .actions { padding: 0 20px 20px; }
+  .word-popup { max-width: 260px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Word Definition Popup -->
+<div class="word-popup" id="wordPopup">
+  <button class="popup-close" id="popupClose">✕</button>
+  <div id="popupContent"></div>
+</div>
+
+<div class="container">
+  <header class="header">
+    <div class="logo">GON<span>english</span></div>
+  </header>
+
+  <div class="scene">
+    <div class="scene-meta">
+      <div class="left">
+        <span class="dot"></span>
+        <span>Scene <span id="sceneNum">01</span></span>
+        <span class="movie-title" id="movieTitle">—</span>
+      </div>
+      <div class="counter">
+        <span class="current" id="currentNum">1</span> / <span id="totalNum">25</span>
+      </div>
+    </div>
+
+    <div class="scene-inner">
+      <div class="scene-content">
+        <div class="scene-body">
+          <div class="quote" id="quote">Loading...</div>
+          <div class="click-tip">
+            <svg viewBox="0 0 24 24"><path d="M15 15l-6 6m0 0l-3-3m3 3V9"/><path d="M9 9V3l6 6"/></svg>
+            단어를 클릭하면 뜻이 나와요
+          </div>
+          <div class="movie-label" id="movieLabel"></div>
+          <div class="character" id="character"></div>
+          <div class="pronunciation" id="pronunciation"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="replayBtn">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            다시 듣기
+          </button>
+          <button class="btn" id="slowBtn">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            천천히
+          </button>
+        </div>
+
+        <div class="translation" id="translation"></div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn ghost" id="prevBtn">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        이전
+      </button>
+      <button class="btn ghost" id="pronounceBtn">한국어 발음</button>
+      <button class="btn ghost" id="translateBtn">한국어 해석</button>
+      <button class="btn primary" id="nextBtn">
+        다음
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="hint">
+    🎬 대사를 듣고 따라 말해보세요 · 단어를 클릭하면 뜻 확인
+  </div>
+</div>
+
+<script>
+const quotes = [
+  { text: "Frankly, my dear, I don't give a damn.", character: "Rhett Butler", movie: "Gone with the Wind (1939)", translation: "솔직히 말해서, 자기야, 난 조금도 신경 안 써.", pronunciation: "프랭클리, 마이 디어, 아이 돈트 기브 어 댐." },
+  { text: "I'm gonna make him an offer he can't refuse.", character: "Don Corleone", movie: "The Godfather (1972)", translation: "그가 거절할 수 없는 제안을 하나 하지.", pronunciation: "아임 가나 메이크 힘 언 오퍼 히 캔트 리퓨즈." },
+  { text: "May the Force be with you.", character: "Han Solo", movie: "Star Wars (1977)", translation: "포스가 당신과 함께하기를.", pronunciation: "메이 더 포스 비 위드 유." },
+  { text: "You're gonna need a bigger boat.", character: "Chief Brody", movie: "Jaws (1975)", translation: "더 큰 배가 필요할 거야.", pronunciation: "유어 가나 니드 어 비거 보트." },
+  { text: "Life is like a box of chocolates. You never know what you're gonna get.", character: "Forrest Gump", movie: "Forrest Gump (1994)", translation: "인생은 초콜릿 상자와 같아. 무엇을 집을지 절대 알 수 없거든.", pronunciation: "라이프 이즈 라이크 어 박스 오브 초컬리츠." },
+  { text: "Here's looking at you, kid.", character: "Rick Blaine", movie: "Casablanca (1942)", translation: "당신을 위해 건배, 그대여.", pronunciation: "히얼즈 루킹 앳 유, 키드." },
+  { text: "I'll be back.", character: "The Terminator", movie: "The Terminator (1984)", translation: "내가 돌아올 거야.", pronunciation: "아일 비 백." },
+  { text: "Houston, we have a problem.", character: "Jim Lovell", movie: "Apollo 13 (1995)", translation: "휴스턴, 문제가 생겼다.", pronunciation: "휴스턴, 위 해브 어 프라블럼." },
+  { text: "You can't handle the truth!", character: "Col. Jessup", movie: "A Few Good Men (1992)", translation: "넌 진실을 감당할 수 없어!", pronunciation: "유 캔트 핸들 더 트루스!" },
+  { text: "I see dead people.", character: "Cole Sear", movie: "The Sixth Sense (1999)", translation: "전 죽은 사람들이 보여요.", pronunciation: "아이 씨 데드 피플." },
+  { text: "To infinity and beyond!", character: "Buzz Lightyear", movie: "Toy Story (1995)", translation: "무한한 공간, 저 너머로!", pronunciation: "투 인피니티 앤드 비욘드!" },
+  { text: "My precious.", character: "Gollum", movie: "The Lord of the Rings (2002)", translation: "내 보물.", pronunciation: "마이 프레셔스." },
+  { text: "Why so serious?", character: "The Joker", movie: "The Dark Knight (2008)", translation: "왜 그렇게 심각해?", pronunciation: "와이 소 시리어스?" },
+  { text: "Just keep swimming.", character: "Dory", movie: "Finding Nemo (2003)", translation: "그냥 계속 헤엄쳐.", pronunciation: "저스트 킵 스위밍." },
+  { text: "I am Iron Man.", character: "Tony Stark", movie: "Avengers: Endgame (2019)", translation: "나는 아이언맨이다.", pronunciation: "아이 앰 아이언 맨." },
+  { text: "After all, tomorrow is another day.", character: "Scarlett O'Hara", movie: "Gone with the Wind (1939)", translation: "어쨌든, 내일은 또 다른 날이니까.", pronunciation: "애프터 올, 투마로우 이즈 어나더 데이." },
+  { text: "Hope is a good thing, maybe the best of things.", character: "Andy Dufresne", movie: "The Shawshank Redemption (1994)", translation: "희망은 좋은 거야, 어쩌면 가장 좋은 것일지도 몰라.", pronunciation: "호프 이즈 어 굿 씽, 메이비 더 베스트 오브 씽즈." },
+  { text: "Carpe diem. Seize the day, boys.", character: "John Keating", movie: "Dead Poets Society (1989)", translation: "카르페 디엠. 오늘을 잡아라, 얘들아.", pronunciation: "카르페이 디엠. 씨즈 더 데이, 보이즈." },
+  { text: "Show me the money!", character: "Rod Tidwell", movie: "Jerry Maguire (1996)", translation: "돈을 보여줘!", pronunciation: "쇼 미 더 머니!" },
+  { text: "You had me at hello.", character: "Dorothy Boyd", movie: "Jerry Maguire (1996)", translation: "당신은 안녕이라는 말로 이미 날 사로잡았어요.", pronunciation: "유 해드 미 앳 헬로우." },
+  { text: "Keep your friends close, but your enemies closer.", character: "Michael Corleone", movie: "The Godfather Part II (1974)", translation: "친구는 가까이, 적은 더 가까이 둬라.", pronunciation: "킵 유어 프렌즈 클로스, 벗 유어 에너미즈 클로저." },
+  { text: "There's no place like home.", character: "Dorothy", movie: "The Wizard of Oz (1939)", translation: "집만큼 좋은 곳은 없어.", pronunciation: "데얼즈 노 플레이스 라이크 홈." },
+  { text: "Elementary, my dear Watson.", character: "Sherlock Holmes", movie: "The Adventures of Sherlock Holmes (1939)", translation: "기초적인 거야, 친애하는 왓슨.", pronunciation: "엘리멘터리, 마이 디어 왓슨." },
+  { text: "Nobody puts Baby in a corner.", character: "Johnny Castle", movie: "Dirty Dancing (1987)", translation: "아무도 베이비를 구석에 두지 않아.", pronunciation: "노바디 풋츠 베이비 인 어 코너." },
+  { text: "I feel the need... the need for speed!", character: "Maverick", movie: "Top Gun (1986)", translation: "나는 느낀다... 속도에 대한 갈망을!", pronunciation: "아이 필 더 니드... 더 니드 포 스피드!" },
+  { text: "Here's to the ones who dream, foolish as they may seem.", character: "Mia", movie: "La La Land (2016)", translation: "꿈꾸는 사람들을 위하여, 어리석어 보일지라도.", pronunciation: "히얼즈 투 더 원스 후 드림, 풀리쉬 애즈 데이 메이 씸." },
+  { text: "You are every reason, every hope, and every dream I've ever had.", character: "Noah", movie: "The Notebook (2004)", translation: "당신은 내가 가진 모든 이유, 모든 희망, 모든 꿈이에요.", pronunciation: "유 아 에브리 리즌, 에브리 호프, 앤드 에브리 드림 아이브 에버 해드." },
+  { text: "We're all traveling through time together, every day of our lives.", character: "Tim", movie: "About Time (2013)", translation: "우리는 모두 매일 함께 시간을 여행하고 있어요.", pronunciation: "위어 올 트래블링 쓰루 타임 투게더, 에브리 데이 오브 아워 라이브즈." },
+  { text: "To me, you are perfect.", character: "Mark", movie: "Love Actually (2003)", translation: "나한테 당신은 완벽해요.", pronunciation: "투 미, 유 아 퍼펙트." },
+  { text: "After all this time? Always.", character: "Snape", movie: "Harry Potter and the Deathly Hallows (2011)", translation: "이 오랜 시간이 지나도? 항상.", pronunciation: "애프터 올 디스 타임? 올웨이즈." },
+  { text: "It's not who I am underneath, but what I do that defines me.", character: "Bruce Wayne", movie: "Batman Begins (2005)", translation: "중요한 건 내 내면이 아니라, 내가 하는 행동이 나를 정의해.", pronunciation: "잇츠 낫 후 아이 앰 언더니스, 벗 왓 아이 두 댓 디파인즈 미." },
+  { text: "You make me want to be a better man.", character: "Melvin Udall", movie: "As Good as It Gets (1997)", translation: "당신은 나를 더 나은 사람이 되고 싶게 만들어요.", pronunciation: "유 메이크 미 원트 투 비 어 베러 맨." },
+  { text: "Every passing minute is another chance to turn it all around.", character: "Sofia", movie: "Vanilla Sky (2001)", translation: "매 순간은 모든 것을 바꿀 수 있는 또 다른 기회야.", pronunciation: "에브리 패싱 미닛 이즈 어나더 챈스 투 턴 잇 올 어라운드." },
+  { text: "The greatest thing you'll ever learn is just to love and be loved in return.", character: "Christian", movie: "Moulin Rouge! (2001)", translation: "당신이 배울 수 있는 가장 위대한 것은 사랑하고 사랑받는 것이에요.", pronunciation: "더 그레이티스트 씽 유일 에버 런 이즈 저스트 투 러브 앤드 비 러브드 인 리턴." },
+  { text: "I wish I knew how to quit you.", character: "Jack Twist", movie: "Brokeback Mountain (2005)", translation: "당신을 그만두는 법을 알았으면 좋겠어.", pronunciation: "아이 위시 아이 뉴 하우 투 퀴트 유." },
+  { text: "You is kind, you is smart, you is important.", character: "Aibileen Clark", movie: "The Help (2011)", translation: "당신은 친절해요, 당신은 똑똑해요, 당신은 소중해요.", pronunciation: "유 이즈 카인드, 유 이즈 스마트, 유 이즈 임포턴트." },
+  { text: "What do you care what they say? It's just noise.", character: "Sonny Hayes", movie: "F1 The Movie (2025)", translation: "그들이 뭐라 하든 왜 신경 써? 그냥 소음일 뿐이야.", pronunciation: "왓 두 유 케어 왓 데이 세이? 잇츠 저스트 노이즈." },
+  { text: "Hope is not a strategy. Create your own breaks.", character: "Sonny Hayes", movie: "F1 The Movie (2025)", translation: "희망은 전략이 아니야. 스스로 기회를 만들어.", pronunciation: "호프 이즈 낫 어 스트래티지. 크리에이트 유어 오운 브레이크스." },
+  { text: "Meet me in Montauk.", character: "Clementine", movie: "Eternal Sunshine of the Spotless Mind (2004)", translation: "몬탁에서 만나요.", pronunciation: "밋 미 인 몬톡." },
+  { text: "I could die right now, Clem. I'm just happy. I've never felt that before.", character: "Joel", movie: "Eternal Sunshine of the Spotless Mind (2004)", translation: "지금 죽어도 좋아, 클렘. 난 그냥 행복해. 이런 느낌은 처음이야.", pronunciation: "아이 쿠드 다이 라잇 나우, 클렘. 아임 저스트 해피." },
+  { text: "I'm just a girl, standing in front of a boy, asking him to love her.", character: "Anna Scott", movie: "Notting Hill (1999)", translation: "나는 그냥 한 소녀예요, 한 남자 앞에 서서, 그에게 사랑해달라고 부탁하는.", pronunciation: "아임 저스트 어 걸, 스탠딩 인 프런트 오브 어 보이, 애스킹 힘 투 러브 허." },
+  { text: "The thing about romance is people only get together right at the very end.", character: "William", movie: "Notting Hill (1999)", translation: "로맨스의 묘미는 사람들이 딱 마지막 순간에만 함께한다는 거야.", pronunciation: "더 씽 어바웃 로맨스 이즈 피플 온리 겟 투게더 라잇 앳 더 베리 엔드." }
+];
+
+// ============ BUILT-IN DICTIONARY (instant, no API) ============
+const WORD_DICT = {
+  "about": {"pos": "전치사/부사", "meaning": "~에 대해, 약"},
+  "after": {"pos": "전치사/접속사", "meaning": "~ 후에"},
+  "always": {"pos": "부사", "meaning": "항상, 언제나"},
+  "another": {"pos": "형용사/대명사", "meaning": "또 다른"},
+  "around": {"pos": "부사/전치사", "meaning": "주변에, 돌아서"},
+  "asking": {"pos": "동사", "meaning": "묻다, 요청하다"},
+  "baby": {"pos": "명사", "meaning": "아기, 자기야"},
+  "back": {"pos": "부사/명사", "meaning": "돌아오다, 뒤"},
+  "before": {"pos": "전치사/접속사", "meaning": "~ 전에"},
+  "best": {"pos": "형용사/부사", "meaning": "최고의, 가장 좋은"},
+  "better": {"pos": "형용사/부사", "meaning": "더 나은, 더 잘"},
+  "beyond": {"pos": "전치사/부사", "meaning": "저 너머, 초월하여"},
+  "bigger": {"pos": "형용사", "meaning": "더 큰"},
+  "boat": {"pos": "명사", "meaning": "배, 보트"},
+  "box": {"pos": "명사", "meaning": "상자, 박스"},
+  "boy": {"pos": "명사", "meaning": "소년, 남자아이"},
+  "boys": {"pos": "명사", "meaning": "소년들, 얘들아"},
+  "breaks": {"pos": "명사/동사", "meaning": "기회, 휴식; 깨다"},
+  "care": {"pos": "동사/명사", "meaning": "신경 쓰다, 관심"},
+  "carpe": {"pos": "동사(라틴어)", "meaning": "잡아라, 붙들어라"},
+  "chance": {"pos": "명사", "meaning": "기회, 가능성"},
+  "chocolates": {"pos": "명사", "meaning": "초콜릿들"},
+  "close": {"pos": "형용사/부사", "meaning": "가까이, 친밀한"},
+  "closer": {"pos": "형용사/부사", "meaning": "더 가까이"},
+  "corner": {"pos": "명사", "meaning": "구석, 모퉁이"},
+  "could": {"pos": "조동사", "meaning": "~할 수 있었다"},
+  "create": {"pos": "동사", "meaning": "만들다, 창조하다"},
+  "damn": {"pos": "감탄사/형용사", "meaning": "제기랄, 빌어먹을"},
+  "dead": {"pos": "형용사", "meaning": "죽은, 사망한"},
+  "dear": {"pos": "형용사/명사", "meaning": "친애하는, 자기야"},
+  "defines": {"pos": "동사", "meaning": "정의하다, 규정하다"},
+  "die": {"pos": "동사", "meaning": "죽다, 사망하다"},
+  "diem": {"pos": "명사(라틴어)", "meaning": "날, 하루"},
+  "dream": {"pos": "명사/동사", "meaning": "꿈, 꿈꾸다"},
+  "elementary": {"pos": "형용사", "meaning": "기초적인, 간단한"},
+  "end": {"pos": "명사/동사", "meaning": "끝, 마지막"},
+  "enemies": {"pos": "명사", "meaning": "적들, 원수들"},
+  "ever": {"pos": "부사", "meaning": "지금까지, 언제나"},
+  "every": {"pos": "형용사", "meaning": "모든, 각각의"},
+  "feel": {"pos": "동사", "meaning": "느끼다, 감각하다"},
+  "felt": {"pos": "동사", "meaning": "느꼈다 (feel 과거형)"},
+  "foolish": {"pos": "형용사", "meaning": "어리석은, 바보 같은"},
+  "force": {"pos": "명사/동사", "meaning": "힘, 포스; 강요하다"},
+  "frankly": {"pos": "부사", "meaning": "솔직히, 터놓고"},
+  "friends": {"pos": "명사", "meaning": "친구들"},
+  "front": {"pos": "명사/형용사", "meaning": "앞, 정면"},
+  "girl": {"pos": "명사", "meaning": "소녀, 여자아이"},
+  "give": {"pos": "동사", "meaning": "주다, 건네다"},
+  "gonna": {"pos": "조동사(구어)", "meaning": "~할 것이다 (going to)"},
+  "good": {"pos": "형용사/명사", "meaning": "좋은, 선한"},
+  "greatest": {"pos": "형용사", "meaning": "가장 위대한"},
+  "handle": {"pos": "동사/명사", "meaning": "감당하다, 다루다"},
+  "happy": {"pos": "형용사", "meaning": "행복한, 기쁜"},
+  "hello": {"pos": "감탄사", "meaning": "안녕, 여보세요"},
+  "home": {"pos": "명사/부사", "meaning": "집, 고향"},
+  "hope": {"pos": "명사/동사", "meaning": "희망, 바라다"},
+  "houston": {"pos": "고유명사", "meaning": "휴스턴 (미국 도시)"},
+  "important": {"pos": "형용사", "meaning": "중요한, 소중한"},
+  "infinity": {"pos": "명사", "meaning": "무한, 무한대"},
+  "iron": {"pos": "명사/형용사", "meaning": "철, 아이언"},
+  "keep": {"pos": "동사", "meaning": "유지하다, 계속하다"},
+  "kid": {"pos": "명사", "meaning": "아이, 꼬마"},
+  "kind": {"pos": "형용사/명사", "meaning": "친절한; 종류"},
+  "knew": {"pos": "동사", "meaning": "알았다 (know 과거형)"},
+  "learn": {"pos": "동사", "meaning": "배우다, 알게 되다"},
+  "life": {"pos": "명사", "meaning": "삶, 인생"},
+  "lives": {"pos": "명사/동사", "meaning": "삶들; 살다"},
+  "looking": {"pos": "동사", "meaning": "바라보다, 건배하다"},
+  "love": {"pos": "동사/명사", "meaning": "사랑하다, 사랑"},
+  "loved": {"pos": "동사/형용사", "meaning": "사랑받다, 사랑받는"},
+  "make": {"pos": "동사", "meaning": "만들다, ~하게 하다"},
+  "maybe": {"pos": "부사", "meaning": "어쩌면, 아마도"},
+  "meet": {"pos": "동사", "meaning": "만나다, 마주치다"},
+  "minute": {"pos": "명사", "meaning": "분, 순간"},
+  "money": {"pos": "명사", "meaning": "돈, 금전"},
+  "montauk": {"pos": "고유명사", "meaning": "몬탁 (뉴욕 지명)"},
+  "need": {"pos": "동사/명사", "meaning": "필요하다, 갈망"},
+  "never": {"pos": "부사", "meaning": "절대 ~않다"},
+  "nobody": {"pos": "대명사", "meaning": "아무도 ~않다"},
+  "noise": {"pos": "명사", "meaning": "소음, 잡음"},
+  "offer": {"pos": "명사/동사", "meaning": "제안, 제안하다"},
+  "ones": {"pos": "대명사/명사", "meaning": "~하는 사람들"},
+  "only": {"pos": "부사/형용사", "meaning": "오직, 단지"},
+  "own": {"pos": "형용사/동사", "meaning": "자신의, 소유하다"},
+  "passing": {"pos": "형용사/동사", "meaning": "지나가는, 흘러가는"},
+  "people": {"pos": "명사", "meaning": "사람들"},
+  "perfect": {"pos": "형용사", "meaning": "완벽한, 완전한"},
+  "place": {"pos": "명사/동사", "meaning": "장소, 두다"},
+  "precious": {"pos": "형용사", "meaning": "소중한, 귀중한"},
+  "problem": {"pos": "명사", "meaning": "문제, 난제"},
+  "puts": {"pos": "동사", "meaning": "두다, 놓다"},
+  "quit": {"pos": "동사", "meaning": "그만두다, 포기하다"},
+  "reason": {"pos": "명사", "meaning": "이유, 근거"},
+  "refuse": {"pos": "동사", "meaning": "거절하다, 거부하다"},
+  "return": {"pos": "명사/동사", "meaning": "돌아오다, 보답"},
+  "right": {"pos": "부사/형용사", "meaning": "바로, 옳은"},
+  "romance": {"pos": "명사", "meaning": "로맨스, 연애"},
+  "say": {"pos": "동사", "meaning": "말하다, 이야기하다"},
+  "seem": {"pos": "동사", "meaning": "~처럼 보이다"},
+  "seize": {"pos": "동사", "meaning": "붙잡다, 장악하다"},
+  "serious": {"pos": "형용사", "meaning": "심각한, 진지한"},
+  "show": {"pos": "동사/명사", "meaning": "보여주다, 쇼"},
+  "smart": {"pos": "형용사", "meaning": "똑똑한, 영리한"},
+  "speed": {"pos": "명사", "meaning": "속도, 빠르기"},
+  "standing": {"pos": "동사/형용사", "meaning": "서 있다, 서있는"},
+  "strategy": {"pos": "명사", "meaning": "전략, 작전"},
+  "swimming": {"pos": "동사/명사", "meaning": "헤엄치다, 수영"},
+  "thing": {"pos": "명사", "meaning": "것, 물건"},
+  "things": {"pos": "명사", "meaning": "것들, 사물들"},
+  "through": {"pos": "전치사/부사", "meaning": "통해서, 지나"},
+  "together": {"pos": "부사", "meaning": "함께, 같이"},
+  "tomorrow": {"pos": "명사/부사", "meaning": "내일"},
+  "traveling": {"pos": "동사", "meaning": "여행하다, 이동하다"},
+  "truth": {"pos": "명사", "meaning": "진실, 사실"},
+  "turn": {"pos": "동사/명사", "meaning": "바꾸다, 돌리다"},
+  "underneath": {"pos": "전치사/부사", "meaning": "내면에, 아래에"},
+  "very": {"pos": "부사/형용사", "meaning": "바로, 정말로"},
+  "want": {"pos": "동사", "meaning": "원하다, 바라다"},
+  "watson": {"pos": "고유명사", "meaning": "왓슨 (홈즈의 친구)"},
+  "wish": {"pos": "동사/명사", "meaning": "바라다, 소원"},
+  "don't": {"pos": "조동사", "meaning": "~하지 않다"},
+  "can't": {"pos": "조동사", "meaning": "~할 수 없다"},
+  "i'm": {"pos": "대명사+동사", "meaning": "나는 ~이다"},
+  "i'll": {"pos": "대명사+조동사", "meaning": "나는 ~할 것이다"},
+  "i've": {"pos": "대명사+동사", "meaning": "나는 ~했다"},
+  "it's": {"pos": "대명사+동사", "meaning": "그것은 ~이다"},
+  "there's": {"pos": "부사+동사", "meaning": "~이 있다"},
+  "here's": {"pos": "부사+동사", "meaning": "자, 여기 있어"},
+  "you're": {"pos": "대명사+동사", "meaning": "당신은 ~이다"},
+  "we're": {"pos": "대명사+동사", "meaning": "우리는 ~이다"},
+  "you'll": {"pos": "대명사+조동사", "meaning": "당신은 ~할 것이다"},
+  "clem": {"pos": "고유명사", "meaning": "클렘 (클레멘타인 애칭)"},
+
+  // 기본 단어들
+  "i": {"pos": "대명사", "meaning": "나, 저"},
+  "you": {"pos": "대명사", "meaning": "당신, 너"},
+  "he": {"pos": "대명사", "meaning": "그, 그 사람"},
+  "she": {"pos": "대명사", "meaning": "그녀"},
+  "we": {"pos": "대명사", "meaning": "우리"},
+  "they": {"pos": "대명사", "meaning": "그들"},
+  "me": {"pos": "대명사", "meaning": "나를, 저를"},
+  "him": {"pos": "대명사", "meaning": "그를, 그에게"},
+  "her": {"pos": "대명사", "meaning": "그녀를, 그녀의"},
+  "my": {"pos": "대명사", "meaning": "나의, 내"},
+  "your": {"pos": "대명사", "meaning": "당신의, 너의"},
+  "his": {"pos": "대명사", "meaning": "그의"},
+  "our": {"pos": "대명사", "meaning": "우리의"},
+  "its": {"pos": "대명사", "meaning": "그것의"},
+  "their": {"pos": "대명사", "meaning": "그들의"},
+  "them": {"pos": "대명사", "meaning": "그들을"},
+  "a": {"pos": "관사", "meaning": "하나의, 어떤"},
+  "an": {"pos": "관사", "meaning": "하나의 (모음 앞)"},
+  "the": {"pos": "관사", "meaning": "그, 저 (특정 명사)"},
+  "is": {"pos": "동사", "meaning": "~이다, ~있다"},
+  "am": {"pos": "동사", "meaning": "~이다 (I와 함께)"},
+  "are": {"pos": "동사", "meaning": "~이다, ~있다"},
+  "was": {"pos": "동사", "meaning": "~이었다 (과거형)"},
+  "were": {"pos": "동사", "meaning": "~이었다 (복수 과거)"},
+  "be": {"pos": "동사", "meaning": "~이다, 되다"},
+  "been": {"pos": "동사", "meaning": "~이었다 (완료형)"},
+  "do": {"pos": "동사/조동사", "meaning": "하다, ~을 하다"},
+  "did": {"pos": "동사", "meaning": "했다 (do 과거형)"},
+  "does": {"pos": "동사", "meaning": "한다 (3인칭 단수)"},
+  "have": {"pos": "동사/조동사", "meaning": "가지다, ~했다"},
+  "has": {"pos": "동사", "meaning": "가진다 (3인칭)"},
+  "had": {"pos": "동사", "meaning": "가졌다 (과거형)"},
+  "will": {"pos": "조동사", "meaning": "~할 것이다"},
+  "would": {"pos": "조동사", "meaning": "~할 것이었다"},
+  "can": {"pos": "조동사", "meaning": "~할 수 있다"},
+  "may": {"pos": "조동사", "meaning": "~해도 된다, ~일지도"},
+  "might": {"pos": "조동사", "meaning": "~일지도 모른다"},
+  "shall": {"pos": "조동사", "meaning": "~할 것이다 (의지)"},
+  "should": {"pos": "조동사", "meaning": "~해야 한다"},
+  "must": {"pos": "조동사", "meaning": "~해야만 한다"},
+  "not": {"pos": "부사", "meaning": "~않다, ~아니다"},
+  "no": {"pos": "부사/형용사", "meaning": "아니오, 없는"},
+  "yes": {"pos": "감탄사", "meaning": "예, 맞아"},
+  "to": {"pos": "전치사/불정사", "meaning": "~에게, ~하기 위해"},
+  "of": {"pos": "전치사", "meaning": "~의, ~중에"},
+  "in": {"pos": "전치사", "meaning": "~안에, ~에서"},
+  "on": {"pos": "전치사", "meaning": "~위에, ~에"},
+  "at": {"pos": "전치사", "meaning": "~에서, ~에"},
+  "by": {"pos": "전치사", "meaning": "~에 의해, ~옆에"},
+  "for": {"pos": "전치사", "meaning": "~을 위해, ~ 동안"},
+  "with": {"pos": "전치사", "meaning": "~와 함께"},
+  "from": {"pos": "전치사", "meaning": "~로부터, ~에서"},
+  "up": {"pos": "부사/전치사", "meaning": "위로, 위에"},
+  "out": {"pos": "부사/전치사", "meaning": "밖으로, 바깥에"},
+  "as": {"pos": "접속사/부사", "meaning": "~로서, ~처럼"},
+  "but": {"pos": "접속사", "meaning": "하지만, 그러나"},
+  "and": {"pos": "접속사", "meaning": "그리고, ~와"},
+  "or": {"pos": "접속사", "meaning": "또는, ~이거나"},
+  "if": {"pos": "접속사", "meaning": "만약 ~라면"},
+  "so": {"pos": "접속사/부사", "meaning": "그래서, 너무나"},
+  "that": {"pos": "접속사/대명사", "meaning": "~라는 것, 그것"},
+  "what": {"pos": "대명사/형용사", "meaning": "무엇, 어떤"},
+  "who": {"pos": "대명사", "meaning": "누구, 누가"},
+  "how": {"pos": "부사", "meaning": "어떻게, 얼마나"},
+  "when": {"pos": "부사/접속사", "meaning": "언제, ~할 때"},
+  "where": {"pos": "부사", "meaning": "어디에, 어디서"},
+  "why": {"pos": "부사", "meaning": "왜, 어째서"},
+  "which": {"pos": "대명사", "meaning": "어떤 것, 어느"},
+  "this": {"pos": "대명사/형용사", "meaning": "이것, 이"},
+  "these": {"pos": "대명사/형용사", "meaning": "이것들, 이"},
+  "it": {"pos": "대명사", "meaning": "그것"},
+  "all": {"pos": "형용사/대명사", "meaning": "모든, 전부"},
+  "some": {"pos": "형용사/대명사", "meaning": "어떤, 몇몇"},
+  "one": {"pos": "수사/대명사", "meaning": "하나, 한 사람"},
+  "two": {"pos": "수사", "meaning": "둘, 2"},
+  "get": {"pos": "동사", "meaning": "얻다, ~하게 되다"},
+  "got": {"pos": "동사", "meaning": "얻었다 (get 과거)"},
+  "go": {"pos": "동사", "meaning": "가다, 이동하다"},
+  "see": {"pos": "동사", "meaning": "보다, 만나다"},
+  "know": {"pos": "동사", "meaning": "알다, 알고 있다"},
+  "just": {"pos": "부사", "meaning": "그냥, 방금, 단지"},
+  "like": {"pos": "전치사/동사", "meaning": "~처럼; 좋아하다"},
+  "now": {"pos": "부사", "meaning": "지금, 이제"},
+  "then": {"pos": "부사", "meaning": "그러면, 그때"},
+  "here": {"pos": "부사", "meaning": "여기, 이곳에"},
+  "there": {"pos": "부사", "meaning": "거기, 저곳에"},
+  "more": {"pos": "형용사/부사", "meaning": "더, 더 많은"},
+  "than": {"pos": "접속사", "meaning": "~보다"},
+  "so": {"pos": "부사/접속사", "meaning": "그래서, 너무"},
+  "too": {"pos": "부사", "meaning": "너무, 또한"},
+  "also": {"pos": "부사", "meaning": "또한, 역시"},
+  "him": {"pos": "대명사", "meaning": "그를, 그에게"}
+};
+
+function fetchDefinition(word) {
+  const clean = word.replace(/[^a-zA-Z']/g, '').toLowerCase();
+  if (!clean) return Promise.resolve(null);
+  const entry = WORD_DICT[clean];
+  if (entry) {
+    return Promise.resolve({ word: clean, pos: entry.pos, meaning: entry.meaning });
+  }
+  return Promise.resolve({ word: clean, pos: "—", meaning: "사전에 없는 단어예요" });
+}
+
+// ============ STATE ============
+let shuffled = [...quotes].sort(() => Math.random() - 0.5);
+let currentIdx = 0;
+let activeWord = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const $ = (id) => document.getElementById(id);
+  const pad = (n) => String(n).padStart(2, '0');
+  const getCurrent = () => shuffled[currentIdx];
+
+  // ============ SPEECH ============
+  function speak(text, rate = 0.9) {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'en-US';
+    utt.rate = rate;
+    utt.pitch = 1.0;
+    const voices = window.speechSynthesis.getVoices();
+    const v = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
+           || voices.find(v => v.lang.startsWith('en-US'))
+           || voices.find(v => v.lang.startsWith('en'));
+    if (v) utt.voice = v;
+    window.speechSynthesis.speak(utt);
+  }
+
+  if (typeof speechSynthesis !== 'undefined') {
+    speechSynthesis.onvoiceschanged = () => {};
+  }
+
+  // ============ POPUP ============
+  const popup = $('wordPopup');
+
+  function showPopup(wordEl, word) {
+    // Deactivate previous
+    if (activeWord && activeWord !== wordEl) activeWord.classList.remove('active');
+    activeWord = wordEl;
+    wordEl.classList.add('active');
+
+    // Position popup near word
+    const rect = wordEl.getBoundingClientRect();
+    const popupW = 260;
+    let left = rect.left + rect.width / 2 - popupW / 2;
+    let top = rect.bottom + window.scrollY + 10;
+
+    // Keep in viewport
+    if (left < 8) left = 8;
+    if (left + popupW > window.innerWidth - 8) left = window.innerWidth - popupW - 8;
+
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+    popup.style.minWidth = popupW + 'px';
+
+    // Instant lookup from built-in dictionary
+    fetchDefinition(word).then(def => {
+      if (!def) {
+        $('popupContent').innerHTML = `
+          <div class="popup-word">${word}</div>
+          <div class="popup-meaning">사전에 없는 단어예요.</div>`;
+      } else {
+        $('popupContent').innerHTML = `
+          <div class="popup-word" style="cursor:pointer" title="클릭해서 발음 듣기">${def.word || word}</div>
+          <div class="popup-pos">${def.pos || ''}</div>
+          <div class="popup-meaning">${def.meaning || ''}</div>
+          <div class="popup-hint">단어 클릭 → 발음 듣기</div>
+        `;
+        $('popupContent').querySelector('.popup-word').onclick = () => speak(def.word || word, 0.8);
+      }
+      popup.classList.add('show');
+    });
+  }
+
+  function hidePopup() {
+    popup.classList.remove('show');
+    if (activeWord) { activeWord.classList.remove('active'); activeWord = null; }
+  }
+
+  $('popupClose').onclick = (e) => { e.stopPropagation(); hidePopup(); };
+
+  document.addEventListener('click', (e) => {
+    if (!popup.contains(e.target) && !e.target.classList.contains('word')) {
+      hidePopup();
+    }
+  });
+
+  // ============ RENDER QUOTE WITH CLICKABLE WORDS ============
+  function renderQuote(text) {
+    const quoteEl = $('quote');
+    // Split preserving punctuation as separate tokens around words
+    const tokens = text.split(/(\s+)/);
+    let html = '"';
+    tokens.forEach(token => {
+      if (/^\s+$/.test(token)) {
+        html += token;
+      } else {
+        // Split off leading/trailing punctuation
+        const match = token.match(/^([^a-zA-Z']*)([a-zA-Z']+)([^a-zA-Z']*)$/);
+        if (match) {
+          const [, pre, word, post] = match;
+          html += `${pre}<span class="word" data-word="${word}">${word}</span>${post}`;
+        } else {
+          html += token;
+        }
+      }
+    });
+    html += '"';
+    quoteEl.innerHTML = html;
+
+    // Attach click events
+    quoteEl.querySelectorAll('.word').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const word = el.dataset.word;
+        if (activeWord === el && popup.classList.contains('show')) {
+          hidePopup();
+        } else {
+          showPopup(el, word);
+        }
+      });
+    });
+  }
+
+  // ============ RENDER ============
+  function render() {
+    const q = getCurrent();
+    hidePopup();
+
+    $('sceneNum').textContent = pad(currentIdx + 1);
+    $('currentNum').textContent = currentIdx + 1;
+    $('totalNum').textContent = shuffled.length;
+    $('movieTitle').textContent = q.movie;
+    $('movieLabel').textContent = q.movie;
+    $('character').textContent = q.character;
+
+    renderQuote(q.text);
+
+    $('pronunciation').classList.remove('show');
+    $('pronunciation').textContent = q.pronunciation;
+    $('translation').classList.remove('show');
+    $('translation').innerHTML = `<strong>해석</strong> ${q.translation}`;
+
+    setTimeout(() => speak(q.text, 0.9), 200);
+  }
+
+  // ============ EVENTS ============
+  $('replayBtn').onclick = () => speak(getCurrent().text, 0.9);
+  $('slowBtn').onclick = () => speak(getCurrent().text, 0.55);
+  $('pronounceBtn').onclick = () => $('pronunciation').classList.toggle('show');
+  $('translateBtn').onclick = () => $('translation').classList.toggle('show');
+
+  $('prevBtn').onclick = () => {
+    currentIdx = (currentIdx - 1 + shuffled.length) % shuffled.length;
+    render();
+  };
+
+  $('nextBtn').onclick = () => {
+    currentIdx = (currentIdx + 1) % shuffled.length;
+    render();
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.code === 'Space') { e.preventDefault(); speak(getCurrent().text, 0.9); }
+    if (e.code === 'ArrowRight') { currentIdx = (currentIdx + 1) % shuffled.length; render(); }
+    if (e.code === 'ArrowLeft') { currentIdx = (currentIdx - 1 + shuffled.length) % shuffled.length; render(); }
+    if (e.code === 'Escape') hidePopup();
+  });
+
+  // ============ INIT ============
+  render();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinema Lines · 발표</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,300;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:     #1A1614;
+  --gold:    #B8893D;
+  --goldDim: #8B6F47;
+  --bg:      #FAF7F0;
+  --white:   #FFFFFF;
+  --dim:     #6B6358;
+  --red:     #A01E23;
+  --green:   #5A7A4A;
+  --line:    rgba(139,111,71,0.2);
+}
+
+html, body { width: 100%; height: 100%; overflow: hidden; background: #111; }
+
+/* ── Deck container ── */
+.deck {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* ── Each slide ── */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.slide.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* ── Slide aspect ratio wrapper ── */
+.slide-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Nav controls ── */
+.nav-controls {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  background: rgba(26,22,20,0.8);
+  padding: 10px 20px;
+  border-radius: 40px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(184,137,61,0.3);
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid var(--goldDim);
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.nav-btn:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.slide-counter {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--goldDim);
+  letter-spacing: 0.1em;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* ── Section badge ── */
+.badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  color: #fff;
+  text-transform: uppercase;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}
+.badge.ask    { background: var(--gold); }
+.badge.demo   { background: var(--red); }
+.badge.result { background: var(--goldDim); }
+
+/* ── Slide titles ── */
+.slide-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* ══════════════════════════
+   SLIDE 1 — TITLE
+══════════════════════════ */
+#s1 .slide-inner { background: var(--ink); }
+
+.s1-gold-bar {
+  position: absolute;
+  left: 0; top: 26%; width: 6px; height: 40%;
+  background: var(--gold);
+}
+
+.s1-logo {
+  position: absolute;
+  left: 5%; top: 26%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(36px, 7vw, 80px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  line-height: 1;
+}
+.s1-logo em {
+  color: var(--gold);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.s1-sub {
+  position: absolute;
+  left: 5%; top: 44%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(18px, 3.5vw, 38px);
+  font-weight: 300;
+  color: var(--bg);
+  letter-spacing: -0.01em;
+}
+
+.s1-tagline {
+  position: absolute;
+  left: 5%; top: 54%;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(11px, 1.5vw, 16px);
+  color: var(--goldDim);
+  letter-spacing: 0.05em;
+}
+
+.s1-quote {
+  position: absolute;
+  right: 4%; top: 5%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(100px, 20vw, 240px);
+  color: #2C2420;
+  line-height: 1;
+  font-weight: 800;
+  user-select: none;
+}
+
+.s1-tags {
+  position: absolute;
+  left: 5%; bottom: 8%;
+  display: flex; gap: 10px;
+}
+.s1-tag {
+  padding: 7px 18px;
+  border-radius: 5px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  color: #fff;
+}
+.s1-tag.ask    { background: var(--gold); }
+.s1-tag.demo   { background: var(--red); }
+.s1-tag.result { background: var(--goldDim); }
+
+/* ══════════════════════════
+   SLIDE 2 — ASK problems
+══════════════════════════ */
+#s2 .slide-inner { background: var(--bg); }
+
+.s2-title {
+  position: absolute;
+  left: 5%; top: 14%;
+  font-size: clamp(22px, 4.5vw, 52px);
+  color: var(--ink);
+}
+
+.s2-cards {
+  position: absolute;
+  left: 5%; right: 5%;
+  top: 42%;
+  display: flex;
+  gap: 2%;
+}
+
+.prob-card {
+  flex: 1;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 6% 5%;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px -8px rgba(26,22,20,0.1);
+  text-align: center;
+}
+.prob-card .emoji { font-size: clamp(28px, 4vw, 48px); display: block; margin-bottom: 8%; }
+.prob-card .label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(12px, 1.8vw, 20px);
+  color: var(--ink);
+  margin-bottom: 4%;
+}
+.prob-card .desc {
+  font-size: clamp(10px, 1.3vw, 15px);
+  color: var(--dim);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════
+   SLIDE 3 — ASK idea
+══════════════════════════ */
+#s3 .slide-inner { background: var(--ink); }
+
+.s3-bigquote {
+  position: absolute;
+  left: 3%; top: 5%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(80px, 15vw, 180px);
+  color: #2C2420;
+  line-height: 1;
+  user-select: none;
+}
+
+.s3-main {
+  position: absolute;
+  left: 7%; top: 16%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(20px, 4vw, 48px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.4;
+  max-width: 80%;
+}
+
+.s3-sub {
+  position: absolute;
+  left: 7%; top: 48%;
+  font-size: clamp(12px, 1.8vw, 20px);
+  color: var(--gold);
+  letter-spacing: 0.03em;
+}
+
+.s3-divider {
+  position: absolute;
+  left: 5%; right: 5%; top: 58%;
+  height: 1px;
+  background: var(--goldDim);
+  opacity: 0.4;
+}
+
+.s3-conclusion {
+  position: absolute;
+  left: 5%; top: 63%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(14px, 2.2vw, 26px);
+  font-weight: 600;
+  color: var(--bg);
+  max-width: 85%;
+}
+
+.s3-arrow {
+  position: absolute;
+  left: 5%; top: 77%;
+  font-size: clamp(12px, 1.6vw, 18px);
+  color: var(--gold);
+}
+
+/* ══════════════════════════
+   SLIDE 4 — DEMO features
+══════════════════════════ */
+#s4 .slide-inner { background: var(--bg); }
+
+.s4-title {
+  position: absolute;
+  left: 5%; top: 14%;
+  font-size: clamp(22px, 4.5vw, 52px);
+  color: var(--ink);
+}
+
+.s4-cards {
+  position: absolute;
+  left: 5%; right: 5%; top: 38%;
+  display: flex; gap: 1.5%;
+}
+
+.feat-card {
+  flex: 1;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 5% 4%;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px -8px rgba(26,22,20,0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8%;
+}
+.feat-icon { font-size: clamp(24px, 3.5vw, 42px); }
+.feat-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(10px, 1.5vw, 17px);
+  color: var(--ink);
+}
+.feat-desc {
+  font-size: clamp(9px, 1.1vw, 13px);
+  color: var(--dim);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════
+   SLIDE 5 — DEMO word popup
+══════════════════════════ */
+#s5 .slide-inner { background: var(--ink); }
+
+.s5-title {
+  position: absolute;
+  left: 5%; top: 13%;
+  font-size: clamp(16px, 3vw, 36px);
+  color: var(--white);
+}
+
+/* Quote card */
+.s5-quote-card {
+  position: absolute;
+  left: 5%; top: 30%;
+  width: 54%;
+  background: #2C2420;
+  border-radius: 10px;
+  padding: 3% 4%;
+  border: 1px solid var(--goldDim);
+}
+.s5-quote-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(10px, 1.6vw, 18px);
+  color: var(--bg);
+  line-height: 1.6;
+  margin-bottom: 6%;
+}
+.s5-word-highlight {
+  display: inline;
+  background: rgba(184,137,61,0.25);
+  border: 1px solid var(--gold);
+  border-radius: 3px;
+  padding: 1px 6px;
+  color: var(--gold);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-style: italic;
+}
+.s5-char {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(8px, 1vw, 12px);
+  color: var(--goldDim);
+  letter-spacing: 0.08em;
+  margin-top: 2%;
+}
+
+/* Popup card */
+.s5-popup {
+  position: absolute;
+  right: 4%; top: 23%;
+  width: 32%;
+  background: var(--ink);
+  border: 1.5px solid var(--goldDim);
+  border-radius: 10px;
+  padding: 4% 5%;
+  box-shadow: 0 16px 40px -8px rgba(0,0,0,0.5);
+}
+.s5-popup-word {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(16px, 2.5vw, 28px);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 4%;
+}
+.s5-popup-pos {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(8px, 0.9vw, 11px);
+  letter-spacing: 0.2em;
+  color: var(--goldDim);
+  text-transform: uppercase;
+  margin-bottom: 6%;
+}
+.s5-popup-meaning {
+  font-size: clamp(12px, 1.6vw, 18px);
+  font-weight: 600;
+  color: var(--bg);
+  margin-bottom: 8%;
+}
+.s5-popup-divider {
+  height: 1px;
+  background: rgba(139,111,71,0.3);
+  margin-bottom: 6%;
+}
+.s5-popup-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(8px, 0.9vw, 10px);
+  color: var(--goldDim);
+  font-style: italic;
+}
+
+/* Before/After */
+.s5-compare {
+  position: absolute;
+  left: 5%; right: 4%; bottom: 5%;
+  display: flex; gap: 2%;
+}
+.s5-compare-box {
+  flex: 1;
+  background: #2C2420;
+  border-radius: 8px;
+  padding: 3% 4%;
+}
+.s5-compare-box.bad  { border: 1.5px solid var(--red); }
+.s5-compare-box.good { border: 1.5px solid var(--green); }
+.s5-compare-label {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(8px, 1vw, 11px);
+  color: var(--goldDim);
+  margin-bottom: 4%;
+  letter-spacing: 0.08em;
+}
+.s5-compare-val {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(12px, 1.8vw, 20px);
+}
+.s5-compare-box.bad  .s5-compare-val { color: var(--red); }
+.s5-compare-box.good .s5-compare-val { color: var(--green); }
+
+/* ══════════════════════════
+   SLIDE 6 — DEMO tech stack
+══════════════════════════ */
+#s6 .slide-inner { background: var(--bg); }
+
+.s6-title {
+  position: absolute;
+  left: 5%; top: 14%;
+  font-size: clamp(22px, 4.5vw, 52px);
+  color: var(--ink);
+}
+
+.s6-grid {
+  position: absolute;
+  left: 5%; right: 5%; top: 36%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2%;
+  height: 56%;
+}
+
+.tech-card {
+  background: var(--white);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 20px -6px rgba(26,22,20,0.08);
+  padding: 5% 5% 5% 7%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.tech-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 15%; bottom: 15%;
+  width: 5px;
+  border-radius: 0 3px 3px 0;
+}
+.tech-card.c1::before { background: var(--gold); }
+.tech-card.c2::before { background: var(--red); }
+.tech-card.c3::before { background: var(--goldDim); }
+.tech-card.c4::before { background: var(--green); }
+
+.tech-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(11px, 1.6vw, 18px);
+  color: var(--ink);
+  margin-bottom: 6%;
+}
+.tech-desc {
+  font-size: clamp(9px, 1.1vw, 13px);
+  color: var(--dim);
+  line-height: 1.55;
+}
+
+/* ══════════════════════════
+   SLIDE 7 — RESULT
+══════════════════════════ */
+#s7 .slide-inner { background: var(--bg); }
+
+.s7-title {
+  position: absolute;
+  left: 5%; top: 14%;
+  font-size: clamp(22px, 4.5vw, 52px);
+  color: var(--ink);
+}
+
+.s7-items {
+  position: absolute;
+  left: 5%; right: 5%; top: 32%; bottom: 18%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.result-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 3%;
+  padding-bottom: 4%;
+  border-bottom: 1px solid var(--line);
+}
+.result-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.result-num {
+  width: clamp(32px, 4.5vw, 52px);
+  height: clamp(32px, 4.5vw, 52px);
+  min-width: clamp(32px, 4.5vw, 52px);
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(10px, 1.3vw, 15px);
+  color: #fff;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.result-text .rtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(12px, 1.8vw, 20px);
+  color: var(--ink);
+  margin-bottom: 3%;
+}
+.result-text .rdesc {
+  font-size: clamp(10px, 1.2vw, 14px);
+  color: var(--dim);
+  line-height: 1.5;
+}
+
+.s7-app-btn {
+  position: absolute;
+  right: 5%; bottom: 5%;
+  background: var(--gold);
+  color: #fff;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(10px, 1.3vw, 14px);
+  letter-spacing: 0.1em;
+  padding: 10px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.s7-app-btn:hover { background: var(--goldDim); }
+
+/* ══════════════════════════
+   SLIDE 8 — OUTRO
+══════════════════════════ */
+#s8 .slide-inner { background: var(--ink); }
+
+.s8-bar {
+  position: absolute;
+  left: 0; top: 26%; width: 6px; height: 40%;
+  background: var(--gold);
+}
+
+.s8-eyebrow {
+  position: absolute;
+  left: 5%; top: 8%;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 1.2vw, 14px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--goldDim);
+}
+
+.s8-main {
+  position: absolute;
+  left: 5%; top: 22%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(18px, 3.5vw, 42px);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.45;
+  max-width: 72%;
+}
+
+.s8-divider {
+  position: absolute;
+  left: 5%; right: 5%; top: 62%;
+  height: 1px;
+  background: var(--goldDim);
+  opacity: 0.35;
+}
+
+.s8-thanks {
+  position: absolute;
+  left: 5%; top: 67%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: clamp(22px, 5vw, 58px);
+  color: var(--gold);
+  letter-spacing: -0.02em;
+}
+
+.s8-sub {
+  position: absolute;
+  left: 5%; top: 84%;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(10px, 1.3vw, 15px);
+  color: var(--goldDim);
+  letter-spacing: 0.05em;
+}
+
+.s8-film {
+  position: absolute;
+  right: 5%; bottom: 5%;
+  font-size: clamp(24px, 3.5vw, 44px);
+  opacity: 0.5;
+}
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ── SLIDE 1: TITLE ── -->
+  <div class="slide active" id="s1">
+    <div class="slide-inner">
+      <div class="s1-quote">"</div>
+      <div class="s1-gold-bar"></div>
+      <div class="s1-logo">GON<em>english</em></div>
+      <div class="s1-sub">Cinema Lines</div>
+      <div class="s1-tagline">영화 대사로 배우는 영어 학습 웹 앱</div>
+      <div class="s1-tags">
+        <span class="s1-tag ask">ASK</span>
+        <span class="s1-tag demo">DEMO</span>
+        <span class="s1-tag result">RESULT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 2: ASK – Problems ── -->
+  <div class="slide" id="s2">
+    <div class="slide-inner">
+      <span class="badge ask">ASK</span>
+      <div class="s2-title slide-title">왜 기존 영어 공부는<br>작심삼일로 끝날까?</div>
+      <div class="s2-cards">
+        <div class="prob-card">
+          <span class="emoji">📖</span>
+          <div class="label">단어장</div>
+          <div class="desc">반복 암기,<br>금방 잊혀짐</div>
+        </div>
+        <div class="prob-card">
+          <span class="emoji">📝</span>
+          <div class="label">문법 문제</div>
+          <div class="desc">맥락 없는<br>지루한 학습</div>
+        </div>
+        <div class="prob-card">
+          <span class="emoji">😴</span>
+          <div class="label">지속성 부족</div>
+          <div class="desc">재미 없어서<br>작심삼일</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 3: ASK – Idea ── -->
+  <div class="slide" id="s3">
+    <div class="slide-inner">
+      <span class="badge ask">ASK</span>
+      <div class="s3-bigquote">"</div>
+      <div class="s3-main">영화는 끝까지 보잖아요.</div>
+      <div class="s3-sub">감정 + 맥락 + 기억 = 오래 남는 학습</div>
+      <div class="s3-divider"></div>
+      <div class="s3-conclusion">재미있는 영화 대사로 영어를 배우면 어떨까?</div>
+      <div class="s3-arrow">그래서 만든 것이 → <strong style="color:var(--gold)">Cinema Lines</strong></div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 4: DEMO – Features ── -->
+  <div class="slide" id="s4">
+    <div class="slide-inner">
+      <span class="badge demo">DEMO</span>
+      <div class="s4-title slide-title">주요 기능</div>
+      <div class="s4-cards">
+        <div class="feat-card">
+          <span class="feat-icon">🔊</span>
+          <div class="feat-title">자동 음성 재생</div>
+          <div class="feat-desc">앱 진입 즉시 원어민<br>발음으로 대사 재생</div>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🎙️</span>
+          <div class="feat-title">속도 조절</div>
+          <div class="feat-desc">보통 / 천천히<br>두 가지 속도 지원</div>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🔍</span>
+          <div class="feat-title">단어 클릭 사전</div>
+          <div class="feat-desc">단어 클릭 즉시<br>한국어 뜻 팝업</div>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">⚡</span>
+          <div class="feat-title">한국어 발음·해석</div>
+          <div class="feat-desc">발음 표기 +<br>전체 문장 번역</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 5: DEMO – Word Popup ── -->
+  <div class="slide" id="s5">
+    <div class="slide-inner">
+      <span class="badge demo">DEMO</span>
+      <div class="s5-title slide-title" style="color:var(--white)">핵심 기능: 단어 클릭 즉시 해석</div>
+
+      <div class="s5-quote-card">
+        <div class="s5-quote-text">
+          "I'm gonna make him an offer he can't <span class="s5-word-highlight">refuse</span>."
+        </div>
+        <div class="s5-char">— Don Corleone · The Godfather (1972)</div>
+      </div>
+
+      <div class="s5-popup">
+        <div class="s5-popup-word">refuse</div>
+        <div class="s5-popup-pos">동사</div>
+        <div class="s5-popup-meaning">거절하다, 거부하다</div>
+        <div class="s5-popup-divider"></div>
+        <div class="s5-popup-hint">단어 클릭 → 발음 듣기</div>
+      </div>
+
+      <div class="s5-compare">
+        <div class="s5-compare-box bad">
+          <div class="s5-compare-label">이전 (API 호출)</div>
+          <div class="s5-compare-val">1~3초 지연</div>
+        </div>
+        <div class="s5-compare-box good">
+          <div class="s5-compare-label">개선 후 (내장 사전)</div>
+          <div class="s5-compare-val">클릭 즉시 표시</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 6: DEMO – Tech Stack ── -->
+  <div class="slide" id="s6">
+    <div class="slide-inner">
+      <span class="badge demo">DEMO</span>
+      <div class="s6-title slide-title">기술 스택</div>
+      <div class="s6-grid">
+        <div class="tech-card c1">
+          <div class="tech-name">HTML / CSS / JS</div>
+          <div class="tech-desc">별도 설치·빌드 없이 파일 하나로 실행 가능.<br>배포와 공유가 가장 단순한 선택.</div>
+        </div>
+        <div class="tech-card c3">
+          <div class="tech-name">Anthropic Claude API</div>
+          <div class="tech-desc">단어 뜻을 별도 DB 없이 AI로 즉시 생성.<br>→ 응답 지연으로 내장 사전 방식으로 개선.</div>
+        </div>
+        <div class="tech-card c2">
+          <div class="tech-name">Web Speech API</div>
+          <div class="tech-desc">외부 TTS 서비스 없이 브라우저만으로 구현.<br>추가 비용·서버 없이 원어민 발음 제공.</div>
+        </div>
+        <div class="tech-card c4">
+          <div class="tech-name">Google Fonts</div>
+          <div class="tech-desc">영화 포스터 감성에 맞는 세리프+모노 조합.<br>무료로 고품질 타이포그래피 구현 가능.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 7: RESULT ── -->
+  <div class="slide" id="s7">
+    <div class="slide-inner">
+      <span class="badge result">RESULT</span>
+      <div class="s7-title slide-title">기대 효과</div>
+      <div class="s7-items">
+        <div class="result-item">
+          <div class="result-num">01</div>
+          <div class="result-text">
+            <div class="rtitle">반복 청취로 발음 습득</div>
+            <div class="rdesc">보통 / 느린 속도 반복 재생으로 발음과 리듬 자연스럽게 체화</div>
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="result-num">02</div>
+          <div class="result-text">
+            <div class="rtitle">맥락 기반 단어 기억</div>
+            <div class="rdesc">영화 장면과 감정에 연결된 단어는 단순 암기보다 훨씬 오래 기억</div>
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="result-num">03</div>
+          <div class="result-text">
+            <div class="rtitle">진입 장벽 제로</div>
+            <div class="rdesc">설치·회원가입 없이 HTML 파일 하나로 즉시 시작</div>
+          </div>
+        </div>
+      </div>
+      <a class="s7-app-btn" href="https://dlgusrhs0402-dotcom.github.io/cine-english./cinema_lines_word_popup.html" target="_blank">▶ 앱 직접 열기</a>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 8: OUTRO ── -->
+  <div class="slide" id="s8">
+    <div class="slide-inner">
+      <div class="s8-bar"></div>
+      <div class="s8-eyebrow">배운 것</div>
+      <div class="s8-main">API 연동부터 성능 최적화까지,<br>실제 서비스를 만드는 흐름</div>
+      <div class="s8-divider"></div>
+      <div class="s8-thanks">감사합니다</div>
+      <div class="s8-sub">Cinema Lines · GONenglish</div>
+      <div class="s8-film">🎬</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Nav ── -->
+<div class="nav-controls">
+  <button class="nav-btn" id="prevBtn" disabled>← 이전</button>
+  <span class="slide-counter" id="counter">1 / 8</span>
+  <button class="nav-btn" id="nextBtn">다음 →</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const counter = document.getElementById('counter');
+
+function goTo(idx) {
+  slides[current].classList.remove('active');
+  current = idx;
+  slides[current].classList.add('active');
+  counter.textContent = `${current + 1} / ${total}`;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === total - 1;
+}
+
+prevBtn.onclick = () => { if (current > 0) goTo(current - 1); };
+nextBtn.onclick = () => { if (current < total - 1) goTo(current + 1); };
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault();
+    if (current < total - 1) goTo(current + 1);
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (current > 0) goTo(current - 1);
+  }
+});
+
+// 슬라이드 클릭으로도 넘기기 (버튼 제외)
+document.querySelector('.deck').addEventListener('click', (e) => {
+  if (e.target.closest('.nav-controls') || e.target.closest('a') || e.target.closest('button')) return;
+  if (current < total - 1) goTo(current + 1);
+});
+</script>
+</body>
+</html>
